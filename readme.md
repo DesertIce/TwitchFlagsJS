@@ -24,7 +24,7 @@ Load TwitchFlagsJS directly. You do not need to load Twemoji yourself.
 </html>
 ```
 
-After GitHub Pages is enabled with **GitHub Actions** as its source, the hosted script is available directly from:
+Use the hosted GitHub Pages script directly:
 
 ```html
 <script src="https://desertice.github.io/TwitchFlagsJS/twitchflags.js"></script>
