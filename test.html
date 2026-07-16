@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TwitchFlagsJS test</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+
+      body {
+        margin: 2rem auto;
+        max-width: 44rem;
+        padding: 0 1rem;
+      }
+
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      label {
+        flex-basis: 100%;
+      }
+
+      input,
+      button {
+        font: inherit;
+        padding: 0.5rem;
+      }
+
+      dt {
+        font-weight: 700;
+        margin-top: 1rem;
+      }
+
+      dd {
+        margin-inline-start: 0;
+        overflow-wrap: anywhere;
+      }
+
+      img.emoji {
+        height: 2em;
+        width: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>TwitchFlagsJS test</h1>
+      <form id="lookup-form">
+        <label for="user-id">Twitch numeric user ID</label>
+        <input id="user-id" name="user-id" inputmode="numeric" pattern="[0-9]+" required>
+        <button type="submit">Look up flag</button>
+      </form>
+      <dl id="results" aria-live="polite"></dl>
+    </main>
+    <script src="twitchflags.js"></script>
+    <script>
+      const methods = [
+        "GetFlagCode",
+        "GetFlagEmoji",
+        "GetFlagShortCode",
+        "GetFlagName",
+        "GetFlagImageHtml",
+        "GetFlagImageElement",
+      ];
+
+      document.querySelector("#lookup-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const userId = document.querySelector("#user-id").value;
+        const results = document.querySelector("#results");
+        results.replaceChildren();
+
+        for (const method of methods) {
+          const term = document.createElement("dt");
+          const value = document.createElement("dd");
+          term.textContent = method;
+          if (method === "GetFlagImageElement") {
+            const image = await TwitchFlagsJS.GetFlagImageElement(userId);
+            if (image) value.appendChild(image);
+          } else {
+            value.textContent = await TwitchFlagsJS[method](userId);
+          }
+          results.append(term, value);
+        }
+      });
+    </script>
+  </body>
+</html>
